@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Appbar } from "../components/Appbar";
 import { Balance } from "../components/Balance";
 import { Button } from "../components/Button";
@@ -9,21 +9,74 @@ export const RechargeAndBills = () => {
     const [accountNumber, setAccountNumber] = useState("");
     const [amount, setAmount] = useState("");
     const [paymentMethod, setPaymentMethod] = useState("wallet");
+    const [balance, setBalance] = useState(0); // Updated balance from backend
+
+    useEffect(() => {
+        fetchBalance(); // Fetch balance on component mount
+    }, []);
+
+    // 🔹 Function to fetch current balance
+    const fetchBalance = async () => {
+        try {
+            const res = await fetch("http://localhost:5000/balance", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("Token")}`
+                }
+            });
+            const data = await res.json();
+            if (res.status === 200) {
+                setBalance(data.balance);
+            }
+        } catch (error) {
+            console.error("Error fetching balance:", error);
+        }
+    };
+
+    // 🔹 Function to handle payments (Recharge/Bill Payment)
+    const handlePayment = async (type) => {
+        const transactionData = {
+            type,
+            accountNumber,
+            amount: parseFloat(amount),
+            paymentMethod,
+            billType: type === "bill" ? billType : undefined
+        };
+
+        try {
+            const res = await fetch("http://localhost:5000/transaction", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("Token")}`
+                },
+                body: JSON.stringify(transactionData),
+            });
+
+            const data = await res.json();
+
+            if (res.status === 201) {
+                alert(`Transaction Successful: ₹${amount} deducted`);
+                setActiveForm(null);
+                fetchBalance(); // Update balance after transaction
+            } else {
+                alert(data.message || "Transaction failed.");
+            }
+        } catch (error) {
+            console.error("Error processing transaction:", error);
+        }
+    };
 
     return (
-        <div>
+        <div style={styles.pageContainer}>
             <Appbar />
-            <div style={{ margin: "32px" }}>
-                <Balance value={"10,000"} />
+            <div style={styles.container}>
+                <Balance value={balance} />
 
                 {/* Buttons for different actions */}
-                <div style={{ display: "flex", justifyContent: "space-around", marginTop: "20px" }}>
-                    <div style={{ width: "45%" }}>
-                        <Button onClick={() => setActiveForm("recharge")} label={"Mobile Recharge"} />
-                    </div>
-                    <div style={{ width: "45%" }}>
-                        <Button onClick={() => setActiveForm("payBill")} label={"Pay Bills"} />
-                    </div>
+                <div style={styles.buttonContainer}>
+                    <Button onClick={() => setActiveForm("recharge")} label={"Mobile Recharge"} style={styles.button} />
+                    <Button onClick={() => setActiveForm("payBill")} label={"Pay Bills"} style={styles.button} />
                 </div>
 
                 {/* Recharge Form */}
@@ -54,18 +107,14 @@ export const RechargeAndBills = () => {
                             <option value="card">Credit/Debit Card</option>
                         </select>
 
-                        <button
-                            style={styles.confirmButton}
-                            onClick={() => {
-                                alert(`Recharged ${accountNumber} with Rs ${amount} via ${paymentMethod}`);
-                                setActiveForm(null);
-                            }}
-                        >
-                            Confirm Recharge
-                        </button>
-                        <button style={styles.cancelButton} onClick={() => setActiveForm(null)}>
-                            Cancel
-                        </button>
+                        <div style={styles.buttonGroup}>
+                            <button style={styles.confirmButton} onClick={() => handlePayment("recharge")}>
+                                Confirm Recharge
+                            </button>
+                            <button style={styles.cancelButton} onClick={() => setActiveForm(null)}>
+                                Cancel
+                            </button>
+                        </div>
                     </div>
                 )}
 
@@ -107,18 +156,14 @@ export const RechargeAndBills = () => {
                             <option value="card">Credit/Debit Card</option>
                         </select>
 
-                        <button
-                            style={styles.confirmButton}
-                            onClick={() => {
-                                alert(`Paid ${billType} bill of Rs ${amount} via ${paymentMethod}`);
-                                setActiveForm(null);
-                            }}
-                        >
-                            Confirm Payment
-                        </button>
-                        <button style={styles.cancelButton} onClick={() => setActiveForm(null)}>
-                            Cancel
-                        </button>
+                        <div style={styles.buttonGroup}>
+                            <button style={styles.confirmButton} onClick={() => handlePayment("bill")}>
+                                Confirm Payment
+                            </button>
+                            <button style={styles.cancelButton} onClick={() => setActiveForm(null)}>
+                                Cancel
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>
@@ -126,46 +171,16 @@ export const RechargeAndBills = () => {
     );
 };
 
-// ✅ CSS Styles (Replaces Tailwind)
+// ✅ Updated Styles
 const styles = {
-    formBlock: {
-        marginTop: "20px",
-        padding: "16px",
-        borderRadius: "8px",
-        backgroundColor: "#f9fafb",
-        boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-        textAlign: "center",
-        width: "40%",
-        margin: "20px auto",
-    },
-    heading: {
-        fontSize: "18px",
-        fontWeight: "bold",
-        marginBottom: "10px",
-    },
-    input: {
-        width: "80%",
-        padding: "8px",
-        marginBottom: "10px",
-        borderRadius: "5px",
-        border: "1px solid #ccc",
-        fontSize: "16px",
-    },
-    confirmButton: {
-        backgroundColor: "#10b981",
-        color: "white",
-        padding: "10px",
-        borderRadius: "5px",
-        border: "none",
-        cursor: "pointer",
-        marginRight: "10px",
-    },
-    cancelButton: {
-        backgroundColor: "#ef4444",
-        color: "white",
-        padding: "10px",
-        borderRadius: "5px",
-        border: "none",
-        cursor: "pointer",
-    },
+    pageContainer: { display: "flex", flexDirection: "column", minHeight: "100vh", justifyContent: "space-between" },
+    container: { padding: "20px", textAlign: "center", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", flex: 1 },
+    buttonContainer: { display: "flex", justifyContent: "space-between", marginTop: "20px", width: "100%", maxWidth: "600px" },
+    button: { width: "45%" },
+    formBlock: { marginTop: "30px", padding: "20px", borderRadius: "8px", backgroundColor: "#f9fafb", boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", width: "100%", maxWidth: "500px", margin: "20px auto", textAlign: "center" },
+    heading: { fontSize: "20px", fontWeight: "bold", marginBottom: "15px" },
+    input: { width: "80%", padding: "10px", marginBottom: "15px", borderRadius: "5px", border: "1px solid #ccc", fontSize: "16px" },
+    buttonGroup: { display: "flex", justifyContent: "space-around", marginTop: "20px" },
+    confirmButton: { backgroundColor: "#10b981", color: "white", padding: "12px 20px", borderRadius: "5px", border: "none", cursor: "pointer", fontSize: "16px", width: "45%" },
+    cancelButton: { backgroundColor: "#ef4444", color: "white", padding: "12px 20px", borderRadius: "5px", border: "none", cursor: "pointer", fontSize: "16px", width: "45%" },
 };

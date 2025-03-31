@@ -24,19 +24,15 @@ export const RequestAndSplit = () => {
     };
 
     return (
-        <div>
+        <div style={styles.pageContainer}>
             <Appbar />
-            <div style={{ margin: "32px" }}>
+            <div style={styles.container}>
                 <Balance value={"10,000"} />
 
                 {/* Buttons for different actions */}
-                <div style={{ display: "flex", justifyContent: "space-around", marginTop: "20px" }}>
-                    <div style={{ width: "45%" }}>
-                        <Button onClick={() => setActiveForm("request")} label={"Request Money"} />
-                    </div>
-                    <div style={{ width: "45%" }}>
-                        <Button onClick={() => setActiveForm("split")} label={"Split Payment"} />
-                    </div>
+                <div style={styles.buttonContainer}>
+                    <Button onClick={() => setActiveForm("request")} label={"Request Money"} style={styles.button} />
+                    <Button onClick={() => setActiveForm("split")} label={"Split Payment"} style={styles.button} />
                 </div>
 
                 {/* Request Money Form */}
@@ -73,18 +69,20 @@ export const RequestAndSplit = () => {
                             style={styles.input}
                         />
 
-                        <button
-                            style={styles.confirmButton}
-                            onClick={() => {
-                                alert(`Requested Rs ${amount} from ${requestId} via ${requestMethod}`);
-                                setActiveForm(null);
-                            }}
-                        >
-                            Confirm Request
-                        </button>
-                        <button style={styles.cancelButton} onClick={() => setActiveForm(null)}>
-                            Cancel
-                        </button>
+                        <div style={styles.buttonGroup}>
+                            <button
+                                style={styles.confirmButton}
+                                onClick={() => {
+                                    alert(`Requested Rs ${amount} from ${requestId} via ${requestMethod}`);
+                                    setActiveForm(null);
+                                }}
+                            >
+                                Confirm Request
+                            </button>
+                            <button style={styles.cancelButton} onClick={() => setActiveForm(null)}>
+                                Cancel
+                            </button>
+                        </div>
                     </div>
                 )}
 
@@ -118,18 +116,20 @@ export const RequestAndSplit = () => {
                             + Add User
                         </button>
 
-                        <button
-                            style={styles.confirmButton}
-                            onClick={() => {
-                                alert(`Split Rs ${totalAmount} among ${splitUsers.length} users.`);
-                                setActiveForm(null);
-                            }}
-                        >
-                            Confirm Split
-                        </button>
-                        <button style={styles.cancelButton} onClick={() => setActiveForm(null)}>
-                            Cancel
-                        </button>
+                        <div style={styles.buttonGroup}>
+                            <button
+                                style={styles.confirmButton}
+                                onClick={() => {
+                                    alert(`Split Rs ${totalAmount} among ${splitUsers.length} users.`);
+                                    setActiveForm(null);
+                                }}
+                            >
+                                Confirm Split
+                            </button>
+                            <button style={styles.cancelButton} onClick={() => setActiveForm(null)}>
+                                Cancel
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>
@@ -137,55 +137,90 @@ export const RequestAndSplit = () => {
     );
 };
 
-// ✅ CSS Styles
+// ✅ Updated Styles
 const styles = {
-    formBlock: {
+    pageContainer: {
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        justifyContent: "space-between",
+    },
+    container: {
+        padding: "20px",
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        flex: 1,
+    },
+    buttonContainer: {
+        display: "flex",
+        justifyContent: "space-between",
         marginTop: "20px",
-        padding: "16px",
+        width: "100%",
+        maxWidth: "600px",
+    },
+    button: {
+        width: "45%",
+    },
+    formBlock: {
+        marginTop: "30px",
+        padding: "20px",
         borderRadius: "8px",
         backgroundColor: "#f9fafb",
         boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-        textAlign: "center",
-        width: "40%",
+        width: "100%",
+        maxWidth: "500px",
         margin: "20px auto",
+        textAlign: "center",
     },
     heading: {
-        fontSize: "18px",
+        fontSize: "20px",
         fontWeight: "bold",
-        marginBottom: "10px",
+        marginBottom: "15px",
     },
     input: {
         width: "80%",
-        padding: "8px",
-        marginBottom: "10px",
+        padding: "10px",
+        marginBottom: "15px",
         borderRadius: "5px",
         border: "1px solid #ccc",
         fontSize: "16px",
     },
+    buttonGroup: {
+        display: "flex",
+        justifyContent: "space-around",
+        marginTop: "20px",
+    },
     confirmButton: {
         backgroundColor: "#10b981",
         color: "white",
-        padding: "10px",
+        padding: "12px 20px",
         borderRadius: "5px",
         border: "none",
         cursor: "pointer",
-        marginRight: "10px",
+        fontSize: "16px",
+        width: "45%",
     },
     cancelButton: {
         backgroundColor: "#ef4444",
         color: "white",
-        padding: "10px",
+        padding: "12px 20px",
         borderRadius: "5px",
         border: "none",
         cursor: "pointer",
+        fontSize: "16px",
+        width: "45%",
     },
     addUserButton: {
         backgroundColor: "#3b82f6",
         color: "white",
-        padding: "8px",
+        padding: "10px",
         borderRadius: "5px",
         border: "none",
         cursor: "pointer",
-        marginBottom: "10px",
+        marginBottom: "15px",
+        fontSize: "16px",
     },
 };

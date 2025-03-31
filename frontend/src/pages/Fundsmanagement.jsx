@@ -1,268 +1,147 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Appbar } from "../components/Appbar";
 import { Balance } from "../components/Balance";
 import { History } from "../components/History";
 import { Button } from "../components/Button";
-import { Users } from "../components/Users";
 
 export const Fundsmanagement = () => {
+    const location = useLocation();
+    const { fetchedData } = location.state || {};
+
+    const [balance, setBalance] = useState(fetchedData?.balance || 0);
     const [activeForm, setActiveForm] = useState(null);
     const [amount, setAmount] = useState("");
-    const [depositMethod, setDepositMethod] = useState("upi");
-    const [transferMethod, setTransferMethod] = useState("mobile");
-    const [transferId, setTransferId] = useState("");
-    const [bankAccount, setBankAccount] = useState("");
-    const [ifscCode, setIfscCode] = useState("");
-    const [cardNumber, setCardNumber] = useState("");
-    const [cvv, setCvv] = useState("");
+    const [receiverUsername, setReceiverUsername] = useState("");
+    const [transactions, setTransactions] = useState(fetchedData?.transactions || []);
 
-    // Handle User Selection for Transfer
-    const handleUserSelection = (user) => {
-        setTransferId(user.firstName); // Auto-fill transfer ID
+    // Fetch transaction history from backend
+    const fetchTransactions = async () => {
+        try {
+            const token = localStorage.getItem("Token");
+            const response = await fetch("http://localhost:5000/wallet/transactions", {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            const data = await response.json();
+            if (data.transactions) {
+                setTransactions(data.transactions);
+            }
+        } catch (error) {
+            console.error("Error fetching transactions:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchTransactions();
+    }, []);
+
+    const handleTransaction = async (endpoint, body) => {
+        try {
+            const token = localStorage.getItem("Token");
+            const response = await fetch(`http://localhost:5000/${endpoint}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(body),
+            });
+
+            const data = await response.json();
+            if (data.updatedBalance || data.senderBalance) {
+                setBalance(data.updatedBalance || data.senderBalance);
+            }
+
+            // Refresh transactions after the action
+            fetchTransactions();
+        } catch (error) {
+            console.error(`Error with ${endpoint}:`, error);
+        }
     };
 
     return (
-        <div>
+        <div style={styles.page}>
             <Appbar />
-            <div style={{ margin: "32px" }}>
-                <Balance value={"10,000"} />
+            <div style={styles.container}>
+                <Balance value={balance} />
 
-                {/* Buttons for Different Actions */}
-                <div style={{ display: "flex", justifyContent: "space-around", marginTop: "20px" }}>
-                    <div style={{ width: "30%" }}>
-                        <Button onClick={() => setActiveForm("deposit")} label={"Add Money to Wallet"} />
-                    </div>
-                    <div style={{ width: "30%" }}>
-                        <Button onClick={() => setActiveForm("withdraw")} label={"Withdraw Money"} />
-                    </div>
-                    <div style={{ width: "30%" }}>
-                        <Button onClick={() => setActiveForm("transfer")} label={"Money Transfer"} />
-                    </div>
+                <div style={styles.buttonContainer}>
+                    <Button onClick={() => setActiveForm("deposit")} label={"Add Money to Wallet"} />
+                    <Button onClick={() => setActiveForm("withdraw")} label={"Withdraw Money"} />
+                    <Button onClick={() => setActiveForm("transfer")} label={"Money Transfer"} />
                 </div>
 
-                {/* Deposit Money Form */}
                 {activeForm === "deposit" && (
-                    <div style={styles.formBlock}>
-                        <h3 style={styles.heading}>Deposit Money</h3>
-
-                        {/* Deposit Method Selection */}
-                        <select
-                            style={styles.input}
-                            value={depositMethod}
-                            onChange={(e) => setDepositMethod(e.target.value)}
-                        >
-                            <option value="upi">UPI</option>
-                            <option value="bank">Bank Transfer</option>
-                            <option value="card">Credit/Debit Card</option>
-                        </select>
-
-                        {/* UPI Input */}
-                        {depositMethod === "upi" && (
-                            <input type="text" placeholder="Enter UPI ID" style={styles.input} />
-                        )}
-
-                        {/* Bank Transfer Inputs */}
-                        {depositMethod === "bank" && (
-                            <>
-                                <input
-                                    type="text"
-                                    placeholder="Enter Bank Account Number"
-                                    value={bankAccount}
-                                    onChange={(e) => setBankAccount(e.target.value)}
-                                    style={styles.input}
-                                />
-                                <input
-                                    type="text"
-                                    placeholder="Enter IFSC Code"
-                                    value={ifscCode}
-                                    onChange={(e) => setIfscCode(e.target.value)}
-                                    style={styles.input}
-                                />
-                            </>
-                        )}
-
-                        {/* Card Inputs */}
-                        {depositMethod === "card" && (
-                            <>
-                                <input
-                                    type="text"
-                                    placeholder="Enter Card Number"
-                                    value={cardNumber}
-                                    onChange={(e) => setCardNumber(e.target.value)}
-                                    style={styles.input}
-                                />
-                                <input
-                                    type="password"
-                                    placeholder="Enter CVV"
-                                    value={cvv}
-                                    onChange={(e) => setCvv(e.target.value)}
-                                    style={styles.input}
-                                />
-                            </>
-                        )}
-
-                        {/* Amount Input */}
-                        <input
-                            type="number"
-                            placeholder="Enter Amount"
-                            value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
-                            style={styles.input}
-                        />
-
-                        <button
-                            style={styles.confirmButton}
-                            onClick={() => {
-                                alert(`Added Rs ${amount} via ${depositMethod.toUpperCase()}`);
-                                setActiveForm(null);
-                            }}
-                        >
-                            Confirm Deposit
-                        </button>
-                        <button style={styles.cancelButton} onClick={() => setActiveForm(null)}>
-                            Cancel
-                        </button>
+                    <div style={styles.form}>
+                        <h3>Add Money</h3>
+                        <input type="number" placeholder="Enter Amount" value={amount} onChange={(e) => setAmount(e.target.value)} />
+                        <Button onClick={() => handleTransaction("wallet/add-money", { amount: Number(amount) })} label={"Add Money"} />
                     </div>
                 )}
 
-                {/* Withdraw Money Form */}
                 {activeForm === "withdraw" && (
-                    <div style={styles.formBlock}>
-                        <h3 style={styles.heading}>Withdraw Money</h3>
-                        <input
-                            type="text"
-                            placeholder="Enter Bank Account Number"
-                            value={bankAccount}
-                            onChange={(e) => setBankAccount(e.target.value)}
-                            style={styles.input}
-                        />
-                        <input
-                            type="text"
-                            placeholder="Enter IFSC Code"
-                            value={ifscCode}
-                            onChange={(e) => setIfscCode(e.target.value)}
-                            style={styles.input}
-                        />
-                        <input
-                            type="number"
-                            placeholder="Enter Amount"
-                            value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
-                            style={styles.input}
-                        />
-                        <button
-                            style={styles.confirmButton}
-                            onClick={() => {
-                                alert(`Withdrawn Rs ${amount} to Bank Account ${bankAccount}`);
-                                setActiveForm(null);
-                            }}
-                        >
-                            Confirm Withdrawal
-                        </button>
-                        <button style={styles.cancelButton} onClick={() => setActiveForm(null)}>
-                            Cancel
-                        </button>
+                    <div style={styles.form}>
+                        <h3>Withdraw Money</h3>
+                        <input type="number" placeholder="Enter Amount" value={amount} onChange={(e) => setAmount(e.target.value)} />
+                        <Button onClick={() => handleTransaction("wallet/withdraw", { amount: Number(amount) })} label={"Withdraw Money"} />
                     </div>
                 )}
 
-                {/* Fund Transfer Form */}
                 {activeForm === "transfer" && (
-                    <div style={styles.formBlock}>
-                        <h3 style={styles.heading}>Fund Transfer</h3>
-
-                        {/* Transfer Method Selection */}
-                        <select
-                            style={styles.input}
-                            value={transferMethod}
-                            onChange={(e) => setTransferMethod(e.target.value)}
-                        >
-                            <option value="mobile">Mobile No</option>
-                            <option value="email">Email</option>
-                            <option value="wallet">Wallet ID</option>
-                        </select>
-
-                        {/* Transfer ID Input */}
-                        <input
-                            type="text"
-                            placeholder={`Enter ${transferMethod}`}
-                            value={transferId}
-                            onChange={(e) => setTransferId(e.target.value)}
-                            style={styles.input}
-                        />
-
-                        {/* Amount Input */}
-                        <input
-                            type="number"
-                            placeholder="Enter Amount"
-                            value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
-                            style={styles.input}
-                        />
-
-                        <button
-                            style={styles.confirmButton}
-                            onClick={() => {
-                                alert(`Transferred Rs ${amount} to ${transferId} via ${transferMethod}`);
-                                setActiveForm(null);
-                            }}
-                        >
-                            Confirm Transfer
-                        </button>
-                        <button style={styles.cancelButton} onClick={() => setActiveForm(null)}>
-                            Cancel
-                        </button>
-
-                        {/* Users List for Selection */}
-                        <Users handleUserSelection={handleUserSelection} />
+                    <div style={styles.form}>
+                        <h3>Transfer Money</h3>
+                        <input type="text" placeholder="Receiver Username" value={receiverUsername} onChange={(e) => setReceiverUsername(e.target.value)} />
+                        <input type="number" placeholder="Enter Amount" value={amount} onChange={(e) => setAmount(e.target.value)} />
+                        <Button onClick={() => handleTransaction("wallet/transfer", { receiverUsername, amount: Number(amount) })} label={"Send Money"} />
                     </div>
                 )}
 
-                <History />
+                <h3>Transaction History:</h3>
+                <History transactions={transactions} />
             </div>
         </div>
     );
 };
 
-// ✅ CSS Styles
 const styles = {
-    formBlock: {
+    page: {
+        minHeight: "100vh",
+        background: "#ffffff",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        paddingTop: "80px",
+    },
+    container: {
+        width: "90%",
+        maxWidth: "1000px",
+        display: "flex",
+        flexDirection: "column",
+        gap: "30px",
+        padding: "40px",
+        borderRadius: "20px",
+        background: "#ffffff",
+        boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.1)",
+        color: "#000000",
+    },
+    buttonContainer: {
+        display: "flex",
+        justifyContent: "space-around",
         marginTop: "20px",
-        padding: "16px",
-        borderRadius: "8px",
-        backgroundColor: "#f9fafb",
-        boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-        textAlign: "center",
-        width: "40%",
-        margin: "20px auto",
     },
-    heading: {
-        fontSize: "18px",
-        fontWeight: "bold",
-        marginBottom: "10px",
-    },
-    input: {
-        width: "80%",
-        padding: "8px",
-        marginBottom: "10px",
-        borderRadius: "5px",
-        border: "1px solid #ccc",
-        fontSize: "16px",
-    },
-    confirmButton: {
-        backgroundColor: "#10b981",
-        color: "white",
-        padding: "10px",
-        borderRadius: "5px",
-        border: "none",
-        cursor: "pointer",
-        marginRight: "10px",
-    },
-    cancelButton: {
-        backgroundColor: "#ef4444",
-        color: "white",
-        padding: "10px",
-        borderRadius: "5px",
-        border: "none",
-        cursor: "pointer",
-    },
+    form: {
+        display: "flex",
+        flexDirection: "column",
+        gap: "10px",
+        padding: "20px",
+        borderRadius: "10px",
+        background: "#f8f8f8",
+        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+    }
 };
+
+export default Fundsmanagement;
