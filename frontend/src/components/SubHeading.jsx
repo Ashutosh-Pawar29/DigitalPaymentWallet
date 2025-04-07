@@ -4,7 +4,7 @@ export function SubHeading({ label }) {
 
 const styles = {
   subHeading: {
-      color: "#64748b", 
+      color: "black", 
       fontSize: "14px",
       paddingTop: "4px",
       paddingLeft: "16px",

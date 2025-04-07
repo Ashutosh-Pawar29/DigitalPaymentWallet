@@ -31,14 +31,20 @@ export const ScanQRCode = () => {
     }, [navigate]);
 
     return (
-        <div>
+        <div style={styles.pageContainer}>
             <Appbar />
             <div style={styles.container}>
-                <h2>Scan QR Code for Payment</h2>
+                <h2 style={styles.heading}>Scan QR Code for Payment</h2>
 
-                {!scanResult ? <div id="reader" style={styles.qrBox}></div> : <p>Scanned Data: {scanResult}</p>}
+                <div style={styles.qrContainer}>
+                    {!scanResult ? (
+                        <div id="reader" style={styles.qrBox}></div>
+                    ) : (
+                        <p style={styles.resultText}>Scanned Data: {scanResult}</p>
+                    )}
+                </div>
 
-                <button style={styles.cancelButton} onClick={() => navigate("/")}>
+                <button style={styles.cancelButton} onClick={() => navigate("/homepage")}>
                     Cancel
                 </button>
             </div>
@@ -48,20 +54,52 @@ export const ScanQRCode = () => {
 
 // ✅ Styles
 const styles = {
+    pageContainer: {
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        justifyContent: "space-between",
+    },
     container: {
         textAlign: "center",
         padding: "20px",
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    heading: {
+        fontSize: "24px",
+        fontWeight: "600",
+        marginBottom: "20px",
+    },
+    qrContainer: {
+        display: "flex",
+        justifyContent: "center",
+        marginBottom: "20px",
     },
     qrBox: {
-        width: "300px",
-        margin: "20px auto",
+        width: "250px",
+        height: "250px",
+        border: "2px solid #ccc",
+        borderRadius: "8px",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    },
+    resultText: {
+        fontSize: "16px",
+        fontWeight: "500",
+        color: "#333",
     },
     cancelButton: {
         backgroundColor: "#ef4444",
         color: "white",
-        padding: "10px",
+        padding: "12px 20px",
         borderRadius: "5px",
         border: "none",
         cursor: "pointer",
+        fontSize: "16px",
+        marginTop: "20px",
+        width: "200px",
     },
 };

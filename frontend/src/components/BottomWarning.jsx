@@ -1,17 +1,26 @@
-import { Link } from "react-router-dom";
+import { button } from "framer-motion/client";
 
-export function BottomWarning({ label, buttonText, to }) {
+export function BottomWarning({ label, buttonText, onClick }) {
     return (
         <div style={styles.container}>
             <div>{label}</div>
-            <Link to={to} style={styles.link}>
+            <button style={styles.button} onClick={onClick}>
                 {buttonText}
-            </Link>
+            </button>
         </div>
     );
 }
 
 const styles = {
+    button:{
+        background: "transparent",
+  border: "none",
+  fontSize: "16px",
+  fontWeight: "bold",
+  color: "rgba(255, 255, 255, 0.8)", // Slightly visible white color
+  cursor: "pointer",
+  textDecoration: "underline"
+    },
     container: {
         padding: "8px 0",
         fontSize: "14px",

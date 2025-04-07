@@ -1,24 +1,19 @@
 export const Balance = ({ value }) => {
     return (
-        <div style={styles.container}><br /><br /><br />
-            <div style={styles.label}>Your balance</div>
-            <div style={styles.amount}>Rs {value}</div>
+        <div style={styles.balance}>
+            <h2>Balance: ₹{value}</h2>
         </div>
     );
 };
 
 const styles = {
-    container: {
-        display: "flex",
-        alignItems: "center",
-    },
-    label: {
+    balance: {
+        fontSize: "24px",
         fontWeight: "bold",
-        fontSize: "18px",
-    },
-    amount: {
-        fontWeight: "600",
-        fontSize: "18px",
-        marginLeft: "16px",
+        color: "#333",
+        textAlign: "center",
+        padding: "20px",
     },
 };
+
+export default Balance;
