@@ -11,30 +11,20 @@ const mainUserData = require("./mainschema");
 const app = express();
 app.use(express.json());
 
-const allowedOrigins = [
-  "http://localhost:5173", // local dev
-  // "https://digital-payment-wallet-349kwmigo.vercel.app" // vercel frontend
-  "https://digital-payment-wallet-mu.vercel.app/"
-];
-
 app.use(cors({
-  origin: function (origin, callback) {
-    // allow requests with no origin (Postman, curl, mobile apps)
-    if (!origin) return callback(null, true);
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      return callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: [
+    "http://localhost:5173",
+    /\.vercel\.app$/   // allow ALL vercel apps
+  ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
 }));
 
-// IMPORTANT: handle preflight requests
+// ✅ VERY IMPORTANT: handle preflight
 app.options("*", cors());
+
+
 
 
 
