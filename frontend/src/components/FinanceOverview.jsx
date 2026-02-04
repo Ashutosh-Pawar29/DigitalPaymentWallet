@@ -3,6 +3,7 @@ import { Appbar } from "../components/Appbar";
 import { Balance } from "../components/Balance";
 import { Button } from "../components/Button";
 import { History } from "../components/History";
+import API_URL from "../config/api";
 import {
   PieChart,
   Pie,
@@ -29,7 +30,7 @@ export const FinanceOverview = () => {
   const fetchBalance = async () => {
     try {
       const token = localStorage.getItem("Token");
-      const res = await fetch("http://localhost:5000/balance", {
+      const res = await fetch(`${API_URL}/balance`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -43,7 +44,7 @@ export const FinanceOverview = () => {
   const fetchTransactions = async () => {
     try {
       const token = localStorage.getItem("Token");
-      const res = await fetch("http://localhost:5000/history", {
+      const res = await fetch(`${API_URL}/history`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();

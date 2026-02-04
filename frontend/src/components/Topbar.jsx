@@ -9,6 +9,7 @@ import OfferIcon from "../assets/offers.svg";
 import NotifyIcon from "../assets/notify.svg";
 import { Appbar } from "../components/Appbar";
 import { useNavigate } from "react-router-dom";
+import API_URL from "../config/api";
 
 export const Topbar = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ export const Topbar = () => {
         return;
       }
 
-      const response = await fetch(`http://localhost:5000/${endpoint}`, {
+      const response = await fetch(`${API_URL}/${endpoint}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Appbar } from "../components/Appbar";
 import { Balance } from "../components/Balance";
 import { Button } from "../components/Button";
+import API_URL from "../config/api";
 
 export const RequestAndSplit = () => {
   const [activeForm, setActiveForm] = useState(null);
@@ -11,6 +12,7 @@ export const RequestAndSplit = () => {
   const [amount, setAmount] = useState("");
   const [splitUsers, setSplitUsers] = useState([""]);
   const [totalAmount, setTotalAmount] = useState("");
+  
 
   useEffect(() => {
     fetchBalance();
@@ -19,7 +21,7 @@ export const RequestAndSplit = () => {
   const fetchBalance = async () => {
     try {
       const token = localStorage.getItem("Token");
-      const response = await fetch("http://localhost:5000/balance", {
+      const response = await fetch(`${API_URL}/balance`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -47,7 +49,7 @@ export const RequestAndSplit = () => {
   const handleRequestMoney = async () => {
     try {
       const token = localStorage.getItem("Token");
-      const response = await fetch("http://localhost:5000/api/request", {
+      const response = await fetch(`${API_URL}/api/request`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -76,7 +78,7 @@ export const RequestAndSplit = () => {
     try {
       const token = localStorage.getItem("Token");
 
-      const response = await fetch("http://localhost:5000/api/split", {
+      const response = await fetch(`${API_URL}/api/split`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

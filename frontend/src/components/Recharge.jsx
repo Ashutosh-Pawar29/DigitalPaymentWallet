@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Appbar } from "../components/Appbar";
 import { Balance } from "../components/Balance";
 import { Button } from "../components/Button";
+import API_URL from "../config/api";
 
 export const RechargeAndBills = () => {
     const [activeForm, setActiveForm] = useState(null);
@@ -18,7 +19,7 @@ export const RechargeAndBills = () => {
     // 🔹 Function to fetch current balance
     const fetchBalance = async () => {
         try {
-            const res = await fetch("http://localhost:5000/balance", {
+            const res = await fetch(`${API_URL}/balance`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem("Token")}`
@@ -44,7 +45,7 @@ export const RechargeAndBills = () => {
         };
 
         try {
-            const res = await fetch("http://localhost:5000/transaction", {
+            const res = await fetch(`${API_URL}/transaction`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Appbar } from "../components/Appbar";
 import { Button } from "../components/Button";
+import API_URL from "../config/api";
 
 export const Notifications = () => {
     const [notifications, setNotifications] = useState([]);
@@ -17,7 +18,7 @@ export const Notifications = () => {
                     return;
                 }
 
-                const response = await fetch("http://localhost:5000/notifications", {
+                const response = await fetch(`${API_URL}/notifications`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",

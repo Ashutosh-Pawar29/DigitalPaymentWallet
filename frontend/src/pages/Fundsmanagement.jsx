@@ -4,6 +4,7 @@ import { Appbar } from "../components/Appbar";
 import { Balance } from "../components/Balance";
 import { History } from "../components/History";
 import { Button } from "../components/Button";
+import API_URL from "../config/api";
 
 export const Fundsmanagement = () => {
     const location = useLocation();
@@ -19,7 +20,7 @@ export const Fundsmanagement = () => {
     const fetchTransactions = async () => {
         try {
             const token = localStorage.getItem("Token");
-            const response = await fetch("http://localhost:5000/wallet/transactions", {
+            const response = await fetch(`${API_URL}/wallet/transactions`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${token}`,

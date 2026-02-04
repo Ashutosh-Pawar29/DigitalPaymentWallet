@@ -10,6 +10,8 @@ import background from "../assets/background.jpg";
 import Topbar from "../components/Topbar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Homepage } from "./Homepage";
+import API_URL from "../config/api";
+
 
 export const AuthPage = () => {
   const [isSignin, setIsSignin] = useState(true);
@@ -60,7 +62,7 @@ export const AuthPage = () => {
                   label={"Sign in"}
                   onClick={async () => {
                     try {
-                      const res = await fetch("http://localhost:5000/signin", {
+                      const res = await fetch(`${API_URL}/signin`, {
                         method: "POST",
                         headers: {
                           "Content-Type": "application/json",
@@ -129,7 +131,7 @@ export const AuthPage = () => {
                   label={"Sign up"}
                   onClick={async () => {
                     try {
-                      const res = await fetch("http://localhost:5000/signup", {
+                      const res = await fetch(`${API_URL}/signup`, {
                         method: "POST",
                         headers: {
                           "Content-Type": "application/json",

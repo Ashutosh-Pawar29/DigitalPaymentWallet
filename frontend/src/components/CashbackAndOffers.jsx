@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Appbar } from "../components/Appbar";
 import { Balance } from "../components/Balance";
+import API_URL from "../config/api";
 
 export const CashbackAndOffers = () => {
   const [activeTab, setActiveTab] = useState("offers");
@@ -9,6 +10,7 @@ export const CashbackAndOffers = () => {
   const [redeemAmount, setRedeemAmount] = useState("");
   const [offers, setOffers] = useState([]);
   const [balance, setBalance] = useState(0);
+  
 
   useEffect(() => {
     const fetchCashbackAndOffers = async () => {
@@ -20,9 +22,9 @@ export const CashbackAndOffers = () => {
         }
 
         const [cashbackResponse, offersResponse, balanceResponse] = await Promise.all([
-          fetch("http://localhost:5000/cashback", { headers: { Authorization: `Bearer ${token}` } }),
-          fetch("http://localhost:5000/offers", { headers: { Authorization: `Bearer ${token}` } }),
-          fetch("http://localhost:5000/balance", { headers: { Authorization: `Bearer ${token}` } })
+          fetch(`${API_URL}/cashback`, { headers: { Authorization: `Bearer ${token}` } }),
+          fetch(`${API_URL}/offers`, { headers: { Authorization: `Bearer ${token}` } }),
+          fetch(`${API_URL}/balance`, { headers: { Authorization: `Bearer ${token}` } })
         ]);
 
         if (!cashbackResponse.ok || !offersResponse.ok || !balanceResponse.ok) {
