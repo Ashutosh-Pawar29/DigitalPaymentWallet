@@ -14,6 +14,7 @@ app.use(express.json());
 const allowedOrigins = [
   "http://localhost:5173", // local dev
   "https://digital-payment-wallet-349kwmigo.vercel.app" // vercel frontend
+  "https://digital-payment-wallet-mu.vercel.app/"
 ];
 
 app.use(cors({
