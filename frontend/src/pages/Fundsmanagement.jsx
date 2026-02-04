@@ -43,7 +43,7 @@ export const Fundsmanagement = () => {
     const handleTransaction = async (endpoint, body) => {
         try {
             const token = localStorage.getItem("Token");
-            const response = await fetch(`http://localhost:5000/${endpoint}`, {
+            const response = await fetch(`${API_URL}/${endpoint}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
