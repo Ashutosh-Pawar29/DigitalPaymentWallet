@@ -103,12 +103,12 @@ export const SendMoney = () => {
                 </div>
                 <button
                     onClick={() => {
-                        axios.post(`${API_URL}/api/v1/account/transfer`, {
-                            to: id,
-                            amount
+                        axios.post(`${API_URL}/wallet/transfer`, {
+                            receiverUsername: id,
+                            amount: Number(amount)
                         }, {
                             headers: {
-                                Authorization: "Bearer " + localStorage.getItem("token")
+                                Authorization: "Bearer " + localStorage.getItem("Token")
                             }
                         });
                     }}

@@ -77,7 +77,7 @@ export const RechargeAndBills = () => {
                     <Button label="Pay Bills" onClick={() => setActiveForm("payBill")} />
                 </div>
 
-                {/* Recharge */}
+                {}
                 {activeForm === "recharge" && (
                     <div style={styles.formBlock}>
                         <h3 style={styles.heading}>Mobile Recharge</h3>
@@ -119,7 +119,7 @@ export const RechargeAndBills = () => {
                     </div>
                 )}
 
-                {/* Bills */}
+                {}
                 {activeForm === "payBill" && (
                     <div style={styles.formBlock}>
                         <h3 style={styles.heading}>Pay Bills</h3>
@@ -176,7 +176,7 @@ export const RechargeAndBills = () => {
     );
 };
 
-// ✅ Glass Styles
+
 const styles = {
     pageContainer: {
         minHeight: "100vh",

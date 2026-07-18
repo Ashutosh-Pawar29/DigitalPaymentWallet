@@ -53,7 +53,7 @@ export const FinanceOverview = () => {
     }
   };
 
-  // ✅ CURRENT MONTH FILTER
+  
   const now = new Date();
   const currentMonthTransactions = transactions.filter((t) => {
     const date = new Date(t.date);
@@ -63,7 +63,7 @@ export const FinanceOverview = () => {
     );
   });
 
-  // ✅ TOTALS
+  
   const totalIncome = currentMonthTransactions
     .filter((t) => t.type === "credit")
     .reduce((sum, t) => sum + t.amount, 0);
@@ -98,7 +98,7 @@ export const FinanceOverview = () => {
         </div>
 
         <div style={styles.chartsContainer}>
-          {/* PIE */}
+          {}
           <div style={styles.chart}>
             <h3>This Month Distribution</h3>
             <PieChart width={250} height={250}>
@@ -111,7 +111,7 @@ export const FinanceOverview = () => {
             </PieChart>
           </div>
 
-          {/* BAR */}
+          {}
           <div style={styles.chart}>
             <h3>Income vs Expenses</h3>
             <BarChart width={300} height={250} data={analyticsData}>
@@ -137,7 +137,7 @@ const styles = {
     margin: "20px auto",
     borderRadius: "15px",
 
-    // ✅ GLASS EFFECT
+    
     background: "rgba(255, 255, 255, 0.08)",
     backdropFilter: "blur(12px)",
     WebkitBackdropFilter: "blur(12px)",

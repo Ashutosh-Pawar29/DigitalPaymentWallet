@@ -97,7 +97,7 @@ export const RequestAndSplit = () => {
       setSplitUsers([""]);
       setTotalAmount("");
       setActiveForm(null);
-      fetchBalance(); // Refresh balance after split
+      fetchBalance(); 
     } catch (err) {
       alert(`❌ ${err.message}`);
     }
@@ -230,7 +230,7 @@ const styles = {
     width: "45%",
   },
 
-  // ✅ GLASS FORM
+  
   formBlock: {
     marginTop: "30px",
     padding: "20px",
@@ -257,7 +257,7 @@ const styles = {
     color: "#ffffff",
   },
 
-  // ✅ GLASS INPUT (IMPORTANT FIX)
+  
   input: {
     width: "80%",
     padding: "10px",
@@ -281,7 +281,7 @@ const styles = {
     marginTop: "20px",
   },
 
-  // ✅ WHITE TRANSPARENT BUTTONS
+  
   confirmButton: {
     background: "rgba(255, 255, 255, 0.1)",
     color: "#ffffff",

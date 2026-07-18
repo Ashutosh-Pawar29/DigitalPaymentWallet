@@ -51,12 +51,12 @@ const styles = {
         width: "95%",
         height: "65px",
 
-        // ✅ Transparent glass effect
+        
         background: "rgba(255, 255, 255, 0.08)",
         backdropFilter: "blur(12px)",
         WebkitBackdropFilter: "blur(12px)",
 
-        color: "#ffffff", // ✅ white text
+        color: "#ffffff", 
 
         display: "flex",
         justifyContent: "space-between",
@@ -64,7 +64,7 @@ const styles = {
         padding: "0 25px",
         borderRadius: "15px",
 
-        // ✅ soft glow instead of heavy shadow
+        
         boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.3)",
         border: "1px solid rgba(255, 255, 255, 0.2)",
 
@@ -76,7 +76,7 @@ const styles = {
         fontSize: "22px",
         fontWeight: "bold",
         letterSpacing: "1px",
-        color: "#ffffff", // ✅ force white
+        color: "#ffffff", 
     },
 
     userSection: {
@@ -88,14 +88,14 @@ const styles = {
         marginRight: "16px",
         fontSize: "16px",
         fontWeight: "500",
-        color: "#ffffff", // ✅ white
+        color: "#ffffff", 
     },
 
     avatar: {
         width: "45px",
         height: "45px",
 
-        // ✅ glass circle
+        
         background: "rgba(255, 255, 255, 0.15)",
         backdropFilter: "blur(6px)",
 

@@ -90,7 +90,7 @@ export const ScanQRCode = () => {
         </div>
     );
 };
-// Styles
+
 const styles = {
     page: {
         minHeight: "100vh",
@@ -109,7 +109,7 @@ const styles = {
         borderRadius: "20px",
         textAlign: "center",
 
-        // glass effect
+        
         background: "rgba(255,255,255,0.08)",
         backdropFilter: "blur(12px)",
         WebkitBackdropFilter: "blur(12px)",

@@ -44,7 +44,7 @@ export const CashbackAndOffers = () => {
       <div style={styles.page}>
         <Balance value={balance} />
 
-        {/* Tabs */}
+        {}
         <div style={styles.tabContainer}>
           <button
             style={activeTab === "cashback" ? styles.activeTab : styles.tab}
@@ -61,7 +61,7 @@ export const CashbackAndOffers = () => {
           </button>
         </div>
 
-        {/* Cashback */}
+        {}
         {activeTab === "cashback" && (
           <div style={styles.card}>
             <h3 style={styles.heading}>Cashback Earned</h3>
@@ -92,7 +92,7 @@ export const CashbackAndOffers = () => {
           </div>
         )}
 
-        {/* Offers */}
+        {}
         {activeTab === "offers" && (
           <div style={styles.card}>
             <h3 style={styles.heading}>Available Offers</h3>
@@ -166,7 +166,7 @@ const styles = {
     padding: "25px",
     borderRadius: "15px",
 
-    // ✅ glass effect
+    
     background: "rgba(255,255,255,0.08)",
     backdropFilter: "blur(12px)",
     border: "1px solid rgba(255,255,255,0.2)",

@@ -8,7 +8,7 @@ export const Notifications = () => {
     const [notifications, setNotifications] = useState([]);
     const navigate = useNavigate();
 
-    // Fetch Notifications
+    
     useEffect(() => {
         const fetchNotifications = async () => {
             try {
@@ -35,7 +35,7 @@ export const Notifications = () => {
         fetchNotifications();
     }, []);
 
-    // Mark as Read
+    
     const markAsRead = (id) => {
         setNotifications((prev) =>
             prev.map((notif) =>
@@ -44,7 +44,7 @@ export const Notifications = () => {
         );
     };
 
-    // Clear All
+    
     const clearNotifications = () => {
         setNotifications([]);
     };
@@ -97,7 +97,7 @@ export const Notifications = () => {
     );
 };
 
-// ✅ Glass UI Styles
+
 const styles = {
     pageContainer: {
         display: "flex",

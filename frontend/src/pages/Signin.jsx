@@ -148,9 +148,9 @@ export const AuthPage = () => {
                         localStorage.setItem("Token", data.token);
                         navigate(data.route);
                       }
-                      // if(res.status==400){
-                      //   alert("check the data :\n First & Last Name should have minimun 4 characaters \n email should be a valid email address containing @gmail.com \n password should be minimum 6 chars :\n(with 1 capital alphabet,1 small alphabet,1 number and 1 special character)")
-                      // }
+                      
+                      
+                      
                       else {
                         alert(data.message || "Invalid data. Please check your inputs.");
                       }

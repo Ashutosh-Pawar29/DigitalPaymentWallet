@@ -87,7 +87,7 @@ export const Fundsmanagement = () => {
                     <Button onClick={() => setActiveForm("transfer")} label="Transfer" />
                 </div>
 
-                {/* DEPOSIT */}
+                {}
                 {activeForm === "deposit" && (
                     <div style={styles.form}>
                         <h3 style={styles.heading}>Add Money</h3>
@@ -110,7 +110,7 @@ export const Fundsmanagement = () => {
                     </div>
                 )}
 
-                {/* WITHDRAW */}
+                {}
                 {activeForm === "withdraw" && (
                     <div style={styles.form}>
                         <h3 style={styles.heading}>Withdraw Money</h3>
@@ -133,7 +133,7 @@ export const Fundsmanagement = () => {
                     </div>
                 )}
 
-                {/* TRANSFER */}
+                {}
                 {activeForm === "transfer" && (
                     <div style={styles.form}>
                         <h3 style={styles.heading}>Transfer Money</h3>

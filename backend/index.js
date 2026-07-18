@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { signupSchema, signinSchema } = require("./validators"); // Import validation schemas
+const { signupSchema, signinSchema } = require("./validators"); 
 const z = require("zod");
 const mainUserData = require("./mainschema");
 
@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    /\.vercel\.app$/   // allow ALL vercel apps
+    /\.vercel\.app$/   
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -98,7 +98,7 @@ app.post("/wallet/add-money", authenticateUser, async (req, res) => {
     };
     user.transactions.push(transaction);
 
-    // Add notification
+    
     const notification = {
       message: `₹${amount} credited to your wallet.`,
       date: new Date(),
@@ -131,7 +131,7 @@ app.post("/api/split", authenticateUser, async (req, res) => {
     const senderId = req.user.id;
 
     for (const identifier of users) {
-      // You could match by mobile, email, or walletId based on your user schema
+      
       const recipient = await  mainUserData.findOne({
         username: identifier
       });
@@ -140,7 +140,7 @@ app.post("/api/split", authenticateUser, async (req, res) => {
         return res.status(404).json({ error: `User ${identifier} not found` });
       }   
 
-      // Create a "request" in DB or trigger a notification
+      
       recipient.notifications.push({
         type: "split_request",
         from: senderId,
@@ -159,7 +159,7 @@ app.post("/api/split", authenticateUser, async (req, res) => {
   }
 });
 
-// ✅ Request Money Route
+
 app.post("/api/request", authenticateUser, async (req, res) => {
   try {
     const { toUsername, amount, description } = req.body;
@@ -183,7 +183,7 @@ app.post("/api/request", authenticateUser, async (req, res) => {
       status: "pending",
     };
 
-    // Push request to receiver's splitRequests and add a notification
+    
     if (!receiver.splitRequests) receiver.splitRequests = [];
     receiver.splitRequests.push(request);
 
@@ -216,7 +216,7 @@ app.post("/wallet/withdraw", authenticateUser, async (req, res) => {
       return res.status(400).json({ message: "Insufficient balance" });
     }
 
-    // Deduct amount and update transaction history
+    
     user.balance -= amount;
     const transaction = {
       amount,
@@ -226,7 +226,7 @@ app.post("/wallet/withdraw", authenticateUser, async (req, res) => {
     };
     user.transactions.push(transaction);
 
-    // Add notification
+    
     const notification = {
       message: `₹${amount} debited from your wallet.`,
       date: new Date(),
@@ -247,8 +247,8 @@ app.post("/wallet/withdraw", authenticateUser, async (req, res) => {
   }
 });
 
-// ✅ Request Split Payment Route
-app.get("/requestsplit", authenticateUser, async (req, res) => {
+
+app.post("/requestsplit", authenticateUser, async (req, res) => {
   try {
     const { participants, amount, description } = req.body;
 
@@ -269,7 +269,7 @@ app.get("/requestsplit", authenticateUser, async (req, res) => {
     if (!requester)
       return res.status(404).json({ message: "Requester not found" });
 
-    const splitAmount = amount / (participants.length + 1); // Including the requester
+    const splitAmount = amount / (participants.length + 1); 
     const requestDetails = {
       requester: req.user.username,
       amount: splitAmount,
@@ -278,7 +278,7 @@ app.get("/requestsplit", authenticateUser, async (req, res) => {
       date: new Date(),
     };
 
-    // Notify each participant
+    
     for (const participant of participants) {
       const user = await mainUserData.findOne({ username: participant });
 
@@ -309,8 +309,8 @@ app.get("/requestsplit", authenticateUser, async (req, res) => {
   }
 });
 
-// ✅ Scan & Pay Route
-app.get("/scanpay", authenticateUser, async (req, res) => {
+
+app.post("/scanpay", authenticateUser, async (req, res) => {
   try {
     const { receiverUsername, amount } = req.body;
     if (!receiverUsername || !amount || amount <= 0) {
@@ -328,11 +328,11 @@ app.get("/scanpay", authenticateUser, async (req, res) => {
       return res.status(400).json({ message: "Insufficient balance" });
     }
 
-    // Perform balance transfer
+    
     sender.balance -= amount;
     receiver.balance += amount;
 
-    // Log transactions
+    
     const senderTransaction = {
       amount,
       type: "debit",
@@ -350,7 +350,7 @@ app.get("/scanpay", authenticateUser, async (req, res) => {
     sender.transactions.push(senderTransaction);
     receiver.transactions.push(receiverTransaction);
 
-    // Add notifications
+    
     sender.notifications.push({
       message: `You sent ₹${amount} via Scan & Pay to ${receiverUsername}.`,
       date: new Date(),
@@ -379,7 +379,7 @@ app.get("/scanpay", authenticateUser, async (req, res) => {
   }
 });
 
-// ✅ Dashboard & Analysis Route
+
 app.get("/analysis", authenticateUser, async (req, res) => {
   try {
     const user = await mainUserData.findOne({ username: req.user.username });
@@ -426,11 +426,11 @@ app.post("/wallet/transfer", authenticateUser, async (req, res) => {
       return res.status(400).json({ message: "Insufficient balance" });
     }
 
-    // ✅ Transfer
+    
     sender.balance -= amount;
     receiver.balance += amount;
 
-    // ✅ Transactions
+    
     const senderTransaction = {
       amount,
       type: "debit",
@@ -448,7 +448,7 @@ app.post("/wallet/transfer", authenticateUser, async (req, res) => {
     sender.transactions.push(senderTransaction);
     receiver.transactions.push(receiverTransaction);
 
-    // ✅ Notifications
+    
     sender.notifications.push({
       message: `You sent ₹${amount} to ${receiverUsername}.`,
       date: new Date(),
@@ -463,22 +463,22 @@ app.post("/wallet/transfer", authenticateUser, async (req, res) => {
     let cashback = 0;
     let cashbackWon = false;
 
-    const chance = Math.floor(Math.random() * 100); // 0–99
+    const chance = Math.floor(Math.random() * 100); 
 
     if (chance > 80) {
       cashbackWon = true;
 
-      // Random % between 0–5
+      
       const cashbackPercent = Math.random() * 5;
 
       cashback = Math.floor((amount * cashbackPercent) / 100);
 
       if (cashback > 0) {
-        // Add cashback to sender
+        
         sender.balance += cashback;
         sender.cashbackEarned += cashback;
 
-        // Add transaction
+        
         const cashbackTransaction = {
           amount: cashback,
           type: "credit",
@@ -488,7 +488,7 @@ app.post("/wallet/transfer", authenticateUser, async (req, res) => {
 
         sender.transactions.push(cashbackTransaction);
 
-        // Notification
+        
         sender.notifications.push({
           message: `🎉 You received ₹${cashback} cashback!`,
           date: new Date(),
@@ -516,7 +516,7 @@ app.post("/wallet/transfer", authenticateUser, async (req, res) => {
   }
 });
 
-// ✅ Get Recharge & Bill Payment Details
+
 app.get("/recharge", authenticateUser, async (req, res) => {
   try {
     const existingUser = await mainUserData.findOne({
@@ -561,10 +561,10 @@ app.post("/transaction", authenticateUser, async (req, res) => {
       return res.status(400).json({ message: "Insufficient balance" });
     }
 
-    // Deduct Balance
+    
     existingUser.balance -= amount;
 
-    // Create Transaction Entry
+    
     const transaction = {
       amount,
       type: "debit",
@@ -577,7 +577,7 @@ app.post("/transaction", authenticateUser, async (req, res) => {
 
     existingUser.transactions.push(transaction);
 
-    // Add notification
+    
     const notification = {
       message: `₹${amount} debited for ${
         type === "recharge"
@@ -604,7 +604,7 @@ app.post("/transaction", authenticateUser, async (req, res) => {
 
 app.get("/balance", authenticateUser, async (req, res) => {
   try {
-    // Find user based on the username extracted from JWT
+    
     const user = await mainUserData.findOne({ username: req.user.username });
 
     if (!user) return res.status(404).json({ message: "User not found" });
@@ -619,10 +619,10 @@ app.get("/balance", authenticateUser, async (req, res) => {
 
 app.get("/me", authenticateUser, (req, res) => {
   try {
-    // authenticateUser already decoded token
+    
     res.json({
       success: true,
-      username: req.user.username, // ✅ comes from middleware
+      username: req.user.username, 
     });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
@@ -630,7 +630,7 @@ app.get("/me", authenticateUser, (req, res) => {
 });
 
 
-// GET /history - Get user's transaction history
+
 app.get("/history", authenticateUser, async (req, res) => {
   try {
     const userId = req.user.username;
@@ -645,7 +645,7 @@ app.get("/history", authenticateUser, async (req, res) => {
 });
 
 
-// ✅ Notifications API
+
 app.get("/notifications", authenticateUser, async (req, res) => {
   try {
     const existingUser = await mainUserData.findOne({
@@ -661,7 +661,7 @@ app.get("/notifications", authenticateUser, async (req, res) => {
   }
 });
 
-// ✅ Wallet API (Balance & Transaction History)
+
 app.get("/wallet", authenticateUser, async (req, res) => {
   try {
     const existingUser = await mainUserData.findOne({
@@ -679,7 +679,7 @@ app.get("/wallet", authenticateUser, async (req, res) => {
   }
 });
 
-// ✅ Cashback & Offers API
+
 app.get("/cashback", authenticateUser, async (req, res) => {
   try {
     const existingUser = await mainUserData.findOne({
@@ -708,7 +708,7 @@ app.get("/offers", authenticateUser, async (req, res) => {
   }
 });
 
-// ✅ Redeem Cashback
+
 app.post("/cashback/redeem", authenticateUser, async (req, res) => {
   try {
     const { amount } = req.body;
@@ -732,10 +732,10 @@ app.post("/cashback/redeem", authenticateUser, async (req, res) => {
   }
 });
 
-// ✅ User Signin
+
 app.post("/signin", async (req, res) => {
   try {
-    // Validate request body
+    
     const validatedData = signinSchema.parse(req.body);
     const { username, password } = validatedData;
 
@@ -777,7 +777,7 @@ app.get("/wallet/transactions", authenticateUser, async (req, res) => {
   }
 });
 
-// ✅ User Signup
+
 app.post("/signup", async (req, res) => {
   try {
     const validatedData = signupSchema.parse(req.body);

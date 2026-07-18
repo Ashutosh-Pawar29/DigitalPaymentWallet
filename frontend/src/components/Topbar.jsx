@@ -14,7 +14,7 @@ import API_URL from "../config/api";
 export const Topbar = () => {
   const navigate = useNavigate();
 
-  // Common function to fetch data and navigate
+  
   const fetchDataAndNavigate = async (endpoint, destination) => {
     try {
       const token = localStorage.getItem("Token");
@@ -34,7 +34,7 @@ export const Topbar = () => {
       const data = await response.json();
       console.log(`Server Response from ${endpoint}:`, data);
 
-      // Navigate to the destination page with fetched data
+      
       navigate(destination, { state: { fetchedData: data } });
     } catch (error) {
       console.error(`Error fetching ${endpoint} data:`, error);
@@ -62,37 +62,37 @@ export const Topbar = () => {
             buttonText="Scan & Pay"
             to="/scan"
             svgPath={ScanIcon}
-            handleClick={() => fetchDataAndNavigate("scanpay", "/scan")}
+            handleClick={() => navigate("/scan")}
           />
           <Menubutton
             buttonText="Dashboard & Analysis"
             to="/FinanceOverview"
             svgPath={DashIcon}
-            handleClick={() => fetchDataAndNavigate("analysis", "/FinanceOverview")}
+            handleClick={() => navigate("/FinanceOverview")}
           />
           <Menubutton
             buttonText="Recharge & Bills"
             to="/recharge"
             svgPath={BillIcon}
-            handleClick={() => fetchDataAndNavigate("recharge", "/recharge")}
+            handleClick={() => navigate("/recharge")}
           />
           <Menubutton
             buttonText="Request/Splits"
             to="/requestandsplit"
             svgPath={SplitsIcon}
-            handleClick={() => fetchDataAndNavigate("requestsplit", "/requestandsplit")}
+            handleClick={() => navigate("/requestandsplit")}
           />
           <Menubutton
             buttonText="Cashback Offers"
             to="/cashbacks"
             svgPath={OfferIcon}
-            handleClick={() => fetchDataAndNavigate("cashback", "/cashbacks")}
+            handleClick={() => navigate("/cashbacks")}
           />
           <Menubutton
             buttonText="Notifications"
             to="/notifications"
             svgPath={NotifyIcon}
-            handleClick={() => fetchDataAndNavigate("notifications", "/notifications")}
+            handleClick={() => navigate("/notifications")}
           />
         </Wrapperfun>
       </div>
@@ -107,7 +107,7 @@ function Wrapperfun({ children }) {
 const styles = {
   container: {
     minHeight: "100vh",
-    background: "transparent", // ❌ remove white
+    background: "transparent", 
     padding: "30px",
     display: "flex",
     flexDirection: "column",
@@ -131,7 +131,7 @@ const styles = {
     padding: "30px",
     borderRadius: "18px",
 
-    // ✅ GLASS EFFECT
+    
     background: "rgba(255, 255, 255, 0.08)",
     backdropFilter: "blur(12px)",
     WebkitBackdropFilter: "blur(12px)",

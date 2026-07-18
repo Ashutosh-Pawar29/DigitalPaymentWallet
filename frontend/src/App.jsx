@@ -20,7 +20,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<AuthPage />} />
 
-          {/* Protected Route for Homepage */}
+          {}
           <Route path="/homepage" element={<ProtectedRoute />}>
             <Route path="" element={<Homepage />} />
           </Route>
@@ -29,7 +29,7 @@ function App() {
           <Route path="/requestandsplit" element={<RequestAndSplit />} />
           <Route path="/scan" element={<ScanQRCode />} />
           <Route path="/confirm-payment" element={<ConfirmPayment />} />
-          {/* <Route path="/homepage" element={<Homepage />} /> */}
+          {}
           <Route path="/" element={<AuthPage />} />
           <Route path="/FinanceOverview" element={<FinanceOverview />} />
           <Route path="/notifications" element={<Notifications />} />

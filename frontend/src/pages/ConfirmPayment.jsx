@@ -41,7 +41,7 @@ export const ConfirmPayment = () => {
     );
 };
 
-// ✅ Glass + White Theme Styles
+
 const styles = {
     page: {
         minHeight: "100vh",
@@ -59,7 +59,7 @@ const styles = {
         padding: "30px",
         borderRadius: "15px",
 
-        // ✅ Glass effect
+        
         background: "rgba(255, 255, 255, 0.08)",
         backdropFilter: "blur(12px)",
         WebkitBackdropFilter: "blur(12px)",
@@ -95,7 +95,7 @@ const styles = {
         padding: "12px",
         borderRadius: "8px",
 
-        // ✅ Transparent white button
+        
         background: "rgba(255,255,255,0.1)",
         border: "1px solid rgba(255,255,255,0.3)",
 
