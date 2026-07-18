@@ -645,6 +645,21 @@ app.get("/history", authenticateUser, async (req, res) => {
 });
 
 
+app.get("/health", async (req, res) => {
+  try {
+    if (mongoose.connection.readyState === 1) {
+      // Perform a database ping to keep MongoDB Atlas active
+      await mongoose.connection.db.admin().ping();
+      return res.status(200).json({ status: "OK", database: "connected" });
+    }
+    res.status(500).json({ status: "Error", database: "disconnected" });
+  } catch (error) {
+    console.error("Health check failed:", error);
+    res.status(500).json({ status: "Error", message: error.message });
+  }
+});
+
+
 
 app.get("/notifications", authenticateUser, async (req, res) => {
   try {
